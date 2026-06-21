@@ -1,0 +1,35 @@
+name: Extract ZIP Files
+
+on:
+  push:
+    paths:
+      - '*.zip'
+  workflow_dispatch:
+
+jobs:
+  extract:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Extract ZIP files
+        run: |
+          for zip_file in *.zip; do
+            if [ -f "$zip_file" ]; then
+              echo "Extracting $zip_file..."
+              unzip -o "$zip_file"
+              rm "$zip_file"
+            fi
+          done
+      
+      - name: Commit and push changes
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add -A
+          if [ -n "$(git status --porcelain)" ]; then
+            git commit -m "Extract ZIP files"
+            git push
+          else
+            echo "No changes to commit"
+          fi
