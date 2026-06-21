@@ -5,6 +5,8 @@ on:
     paths:
       - '*.zip'
   workflow_dispatch:
+  schedule:
+    - cron: '0 0 * * *'
 
 jobs:
   extract:
